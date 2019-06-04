@@ -3,11 +3,15 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 import paths from './paths';
 import rules from './rules';
+import setupProxy from './setupProxy';
+
+require('dotenv').config();
 
 module.exports = {
     entry: paths.entryPath,
     module: {
-        rules
+        rules,
+        setupProxy
     },
     resolve: {
         modules: ['src', 'node_modules'],
@@ -25,6 +29,10 @@ module.exports = {
                 removeComments: true,
                 removeAttributeQuotes: true
             }
+        }),
+        new webpack.DefinePlugin({
+            LAMBDA_ENDPOINT: JSON.stringify(process.env.LAMBDA_ENDPOINT),
+            SLACK_WEBHOOK_URL: JSON.stringify(process.env.SLACK_WEBHOOK_URL)
         })
     ]
 };
